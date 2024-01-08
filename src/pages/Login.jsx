@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link ,useNavigate} from "react-router-dom";
-import { useEffect, useState } from "react";
-import toast ,{Toaster} from "react-hot-toast";
+import { useState } from "react";
+import toast  from "react-hot-toast";
 import axios from "axios";
 import Loader from "../components/Load";
 import {
@@ -40,12 +40,14 @@ function Login() {
         console.log(data);
         axios.post('https://edu-tech-bwe5.onrender.com/v1/login',data).then(res=>{ 
           console.log(res); 
-        if(res.data.Success==true){
-            setLoad(false)
+          setLoad(false)
+        if(res.data.Success===true){
+            
             navigate('/landing')        
         }
         else{
-            toast.error("Something Went Wrong")
+          
+            toast.error(res.data.Message)
         }
     
 })
@@ -78,7 +80,7 @@ function Login() {
                 <MDBInput wrapperClass='mb-4' label='Email address' name='email' type='email' onChange={handleInput} size="lg"/>
                 <MDBInput wrapperClass='mb-4' label='Password' name='password' type='password' onChange={handleInput} size="lg"/>
 
-              <MDBBtn className="mb-4 px-5" color='dark' size='lg'>Login</MDBBtn>
+              <MDBBtn className="mb-4 px-5" color='dark' type="submit" size='lg'>Login</MDBBtn>
               <a className="small text-muted" href="#!">Forgot password?</a>
               <p className="mb-5 pb-lg-2" style={{color: '#393f81'}}>Don't have an account? <Link to="/Register" style={{color: '#393f81'}}>Register here</Link></p>
 

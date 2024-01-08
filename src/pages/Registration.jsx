@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import toast ,{Toaster} from "react-hot-toast";
 import axios from "axios";
 import {
@@ -48,7 +48,7 @@ function Register() {
         console.log(data);
         axios.post('https://edu-tech-bwe5.onrender.com/v1/registration',data).then(res=>{ 
           console.log(res); 
-        if(res.data.Success==true){
+        if(res.data.Success===true){
             toast.success(res.data.Message)        
         }
         else{
