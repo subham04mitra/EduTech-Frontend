@@ -17,7 +17,9 @@ import {
 from 'mdb-react-ui-kit';
 
 function Register() {
-
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false);
+  const [isverify,setIsverify]=useState(false)
+  const[otp,setOtp]=useState(0);
     const [user,setUser]=useState({
         name:"",
         email:"",
@@ -32,6 +34,10 @@ function Register() {
         e.persist();
         setUser({...user,[e.target.name]:e.target.value})
     }
+    const handleOtp=(e)=>{
+      e.persist();
+      setOtp(e.target.value)
+  }
     const userSubmit=(e)=>{
   
         e.preventDefault();
@@ -58,8 +64,36 @@ function Register() {
 })
     }
 
+const verify=(e)=>{
+  
+ let otpData={
+  email:user.email,
+  otp:otp
+ }
+ axios.post('https://edu-tech-bwe5.onrender.com/v1/verifyotp',otpData).then(res=>{ 
+          console.log(res); 
+        if(res.data.Success===true){
+          setIsButtonEnabled(true)
+            toast.success(res.data.Message)        
+        }
+        else{
+            toast.error(res.data.Message)
+        }
 
-
+})}
+const SendOtp=()=>{
+  let mail={email:user.email}
+  axios.post('https://edu-tech-bwe5.onrender.com/v1/sendotp',mail).then(res=>{ 
+    console.log(res); 
+  if(res.data.Success===true){
+    setIsverify(true)
+      toast.success(res.data.Message)        
+  }
+  else{
+      toast.error(res.data.Message)
+  }
+})
+}
 
   return (
     <MDBContainer fluid>
@@ -110,16 +144,18 @@ function Register() {
                 <MDBInput label='Password' name='password' onChange={handleInput} type='password'/>
               </div>
 
-              {/* <div className="d-flex flex-row align-items-center mb-4">
+              <div className="d-flex flex-row align-items-center mb-4">
                 <MDBIcon fas icon="key me-3" size='lg'/>
-                <MDBInput label='Repeat your password' id='form4' type='password'/>
-              </div> */}
+                <MDBInput label='OTP' name='otp' onChange={handleOtp} type='number'/>
+              </div> 
+              <MDBBtn className='mb-4'  type="button" onClick={SendOtp} size='lg'>Send OTP</MDBBtn>
+              <MDBBtn className='mb-4'  type="button" disabled={!isverify} onClick={verify} size='lg'>Verify</MDBBtn>
 
               <div className='mb-4'>
                 <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Subscribe to our newsletter' />
               </div>
 
-              <MDBBtn className='mb-4'  type="submit" size='lg'>Register</MDBBtn>
+              <MDBBtn className='mb-4'  type="submit" size='lg'  disabled={!isButtonEnabled}>Register</MDBBtn>
 
             </MDBCol>
            
